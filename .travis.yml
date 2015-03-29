@@ -2,6 +2,16 @@ sudo: false
 language: java
 jdk: oraclejdk7
 
+install:
+script:
+- ./gradlew check
+
+- ssh-keygen -t ecdsa -N '' -f $HOME/.ssh/id_ecdsa
+- cat $HOME/.ssh/id_ecdsa.pub > $HOME/.ssh/authorized_keys
+- ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o HostKeyAlgorithms=ssh-rsa -i $HOME/.ssh/id_ecdsa localhost id
+- ssh-keygen -H -F localhost
+- ./gradlew acceptanceTest
+
 before_deploy:
 - ./gradlew shadowJar bintrayUpload
 deploy:

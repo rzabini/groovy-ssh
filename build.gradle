@@ -139,6 +139,14 @@ tasks.bintrayUpload.doFirst {
 
 task install(dependsOn: 'publishMavenPublicationToMavenLocal')
 
+/**
+ * Tasks for acceptance test of packaged JAR
+ */
+task acceptanceTest(type: JavaExec, dependsOn: shadowJar) {
+    main = '-jar'
+    args = [shadowJar.archivePath, "$projectDir/src/acceptanceTest/groovy/specifications.groovy"]
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
