@@ -8,8 +8,8 @@ script:
 
 - ssh-keygen -t ecdsa -N '' -f $HOME/.ssh/id_ecdsa
 - cat $HOME/.ssh/id_ecdsa.pub > $HOME/.ssh/authorized_keys
-- ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o HostKeyAlgorithms=ssh-rsa -i $HOME/.ssh/id_ecdsa localhost id
-- ssh-keygen -H -F localhost
+- ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o HostKeyAlgorithms=ecdsa-sha2-nistp256 -o HashKnownHosts=no -i $HOME/.ssh/id_ecdsa localhost id
+- cat $HOME/.ssh/known_hosts
 - ./gradlew acceptanceTest
 
 before_deploy:

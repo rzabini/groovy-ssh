@@ -144,7 +144,7 @@ task install(dependsOn: 'publishMavenPublicationToMavenLocal')
  */
 task acceptanceTest(type: JavaExec, dependsOn: shadowJar) {
     main = '-jar'
-    args = [shadowJar.archivePath, "$projectDir/src/acceptanceTest/groovy/specifications.groovy"]
+    args = [shadowJar.archivePath, '-d', "$projectDir/src/acceptanceTest/groovy/specifications.groovy"]
 }
 
 task wrapper(type: Wrapper) {
