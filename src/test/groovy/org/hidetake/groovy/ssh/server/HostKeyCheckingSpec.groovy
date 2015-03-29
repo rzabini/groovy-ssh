@@ -64,6 +64,29 @@ class HostKeyCheckingSpec extends Specification {
     }
 
 
+    def "trying OpenSSH connection"() {
+        given:
+        ssh = Ssh.newService()
+        ssh.remotes {
+            testServer {
+                host = 'localhost'
+                user = System.getProperty('user.name')
+                identity = new File("${System.getProperty('user.home')}/.ssh/id_ecdsa")
+            }
+        }
+
+        when:
+        ssh.run {
+            session(ssh.remotes.testServer) {
+                execute 'id'
+            }
+        }
+
+        then:
+        noExceptionThrown()
+    }
+
+
     def "strict host key checking should be turned off if knownHosts is allowAnyHosts"() {
         given:
         ssh.settings {

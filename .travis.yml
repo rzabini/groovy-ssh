@@ -4,12 +4,12 @@ jdk: oraclejdk7
 
 install:
 script:
-- ./gradlew check
-
 - ssh-keygen -t ecdsa -N '' -f $HOME/.ssh/id_ecdsa
 - cat $HOME/.ssh/id_ecdsa.pub > $HOME/.ssh/authorized_keys
 - ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o HostKeyAlgorithms=ecdsa-sha2-nistp256 -o HashKnownHosts=no -i $HOME/.ssh/id_ecdsa localhost id
 - cat $HOME/.ssh/known_hosts
+
+- ./gradlew check
 - ./gradlew acceptanceTest
 
 before_deploy:
