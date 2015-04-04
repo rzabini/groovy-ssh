@@ -11,6 +11,10 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
+import static org.hidetake.groovy.ssh.server.SshServerMock.commandWithExit
+import static org.hidetake.groovy.ssh.server.SshServerMock.commandWithExit
+import static org.hidetake.groovy.ssh.server.SshServerMock.commandWithExit
+
 @org.junit.experimental.categories.Category(ServerIntegrationTest)
 class ExpectSpec extends Specification {
 
