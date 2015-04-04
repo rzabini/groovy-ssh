@@ -1,18 +1,20 @@
 package com.github.rzabini.ssh.expect
 
 import groovy.util.logging.Slf4j
+import org.hidetake.groovy.ssh.core.Remote
 import org.hidetake.groovy.ssh.core.settings.OperationSettings
+import org.hidetake.groovy.ssh.extension.CoreExtensions
 import org.hidetake.groovy.ssh.operation.Operations
+import org.hidetake.groovy.ssh.operation.SftpOperations
 import org.hidetake.groovy.ssh.session.SessionHandler
 
 @Slf4j
-class SessionHandlerWithExpect extends SessionHandler{
+class SessionHandlerWithExpect implements CoreExtensions {
 
     OperationsWithExpect operations
     private final OperationSettings operationSettings
 
     SessionHandlerWithExpect(OperationsWithExpect operations, OperationSettings operationSettings) {
-        super(operations, operationSettings)
         this.operations=operations
         this.operationSettings=operationSettings
     }
@@ -47,4 +49,24 @@ class SessionHandlerWithExpect extends SessionHandler{
         }
     }
 
+    @Override
+    Operations getOperations() {
+        operations
+    }
+
+    @Override
+    OperationSettings getOperationSettings() {
+        operationSettings
+    }
+
+    @Override
+    Remote getRemote() {
+        operations.remote
+    }
+
+    @Override
+    def sftp(@DelegatesTo(SftpOperations) Closure closure) {
+        assert closure, 'closure must be given'
+        operations.sftp(closure)
+    }
 }
