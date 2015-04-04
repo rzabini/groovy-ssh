@@ -1,4 +1,4 @@
-package org.hidetake.groovy.ssh.expect
+package com.github.rzabini.ssh.expect
 
 import org.apache.sshd.server.Command
 import org.apache.sshd.server.Environment

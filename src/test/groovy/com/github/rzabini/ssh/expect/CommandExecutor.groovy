@@ -1,4 +1,4 @@
-package org.hidetake.groovy.ssh.expect
+package com.github.rzabini.ssh.expect
 
 interface CommandExecutor {
 

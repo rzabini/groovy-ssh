@@ -1,7 +1,5 @@
-package org.hidetake.groovy.ssh.expect
+package com.github.rzabini.ssh.expect
 
-import com.github.rzabini.ssh.expect.ServiceWithExpect
-import com.github.rzabini.ssh.expect.SshWithExpect
 import org.apache.sshd.SshServer
 import org.apache.sshd.common.Factory
 import org.apache.sshd.server.CommandFactory
