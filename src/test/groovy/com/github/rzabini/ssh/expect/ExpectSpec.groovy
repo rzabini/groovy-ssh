@@ -100,8 +100,26 @@ class ExpectSpec extends Specification {
         1 * commandExecutor.processCommand("hello server") >> 'please enter password:'
         1 * commandExecutor.processCommand("Welcome1") >> 'password OK'
         notThrown Exception
+    }
 
+    def "throws exception when result not found in specified time"() {
+        when:
+        ssh.run {
+            session(ssh.remotes.testServer) {
+                shellExpect {
+                    send 'hello server'
+                    expectOrThrow 1,'please enter password:'
+                    send 'Welcome2'
+                    expectOrThrow 1, 'password OK'
+                }
+            }
+        }
 
+        then:
+        1 * commandExecutor.processCommand("hello server") >> 'please enter password:'
+        commandExecutor.processCommand("Welcome1") >> 'password OK'
+        commandExecutor.processCommand("Welcome2") >> 'wrong password'
+        thrown Expect.TimeoutException
     }
 
 
