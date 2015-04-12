@@ -18,8 +18,6 @@ import static org.hidetake.groovy.ssh.server.SshServerMock.commandWithExit
 @org.junit.experimental.categories.Category(ServerIntegrationTest)
 class ExpectSpec extends Specification {
 
-    private static final NL = Utilities.eol()
-
     SshServer server
     CommandExecutor commandExecutor=Mock(CommandExecutor)
 
@@ -28,8 +26,6 @@ class ExpectSpec extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
-
-
 
     def setup() {
         startServer()
@@ -45,7 +41,6 @@ class ExpectSpec extends Specification {
                 user = 'someuser'
                 password = 'somepassword'
             }
-
         }
     }
 
@@ -56,8 +51,6 @@ class ExpectSpec extends Specification {
         server.shellFactory = Mock(Factory){
             create() >> new StubShell(commandExecutor, PROMPT)
         }
-
-
         server.passwordAuthenticator = Mock(PasswordAuthenticator) {
             (0.._) * authenticate('someuser', 'somepassword', _) >> true
         }
@@ -83,8 +76,10 @@ class ExpectSpec extends Specification {
 
     }
 
-    def "can send a command and expect a result"() {
+
+    def "can send command and expect a result"() {
         when:
+
         ssh.run {
             session(ssh.remotes.testServer) {
                 shellExpect {
@@ -98,12 +93,14 @@ class ExpectSpec extends Specification {
 
         then:
         1 * commandExecutor.processCommand("hello server") >> 'please enter password:'
-        1 * commandExecutor.processCommand("Welcome1") >> 'password OK'
+        commandExecutor.processCommand("Welcome1") >> 'password OK'
+        commandExecutor.processCommand("Welcome2") >> 'wrong password'
         notThrown Exception
     }
 
     def "throws exception when result not found in specified time"() {
         when:
+
         ssh.run {
             session(ssh.remotes.testServer) {
                 shellExpect {
@@ -122,6 +119,28 @@ class ExpectSpec extends Specification {
         thrown Expect.TimeoutException
     }
 
-
+    def "can specify a script as extension"() {
+        def doLogin = { password ->
+            shellExpect {
+                send 'hello server'
+                expectOrThrow 3,'please enter password:'
+                send password
+                expectOrThrow 3, "password OK"
+            }
+        }
+        ssh.settings {
+            extensions.add login: doLogin
+        }
+        when:
+        ssh.run {
+            session(ssh.remotes.testServer) {
+                login('Welcome1')
+            }
+        }
+        then:
+        commandExecutor.processCommand("hello server") >> 'please enter password:'
+        commandExecutor.processCommand("Welcome1") >> 'password OK'
+        notThrown Exception
+    }
 
 }
