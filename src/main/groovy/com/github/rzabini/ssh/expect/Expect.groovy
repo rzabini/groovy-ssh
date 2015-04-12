@@ -182,7 +182,7 @@ public class Expect {
     public int expect(int timeout, Object... patterns) {
         ArrayList<Pattern> list = new ArrayList<Pattern>();
         for (Object o : patterns) {
-            if (o instanceof String)
+            if (o instanceof String || o instanceof GString)
                 list.add(Pattern.compile(Pattern.quote((String) o))); // requires 1.5 and up
             else if (o instanceof Pattern){
                 list.add((Pattern) o);
